@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-image"></i>
+                <span>Favicon Generator</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Generator</a>
+                <a href="documentation.html" class="nav-link">Documentation</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="upload-container">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <button class="main-action-btn" id="mainActionBtn">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Upload Your Icon</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Animation -->
+    <div class="processing-overlay" id="processingOverlay">
+        <div class="processing-content">
+            <div class="processing-spinner">
+                <svg class="spinner-svg" viewBox="0 0 50 50">
+                    <circle class="spinner-circle" cx="25" cy="25" r="20" fill="none" stroke-width="2"></circle>
+                </svg>
+            </div>
+            <div class="processing-status">
+                <h2>Processing</h2>
+                <p id="processingMessage">Creating your favicon pack...</p>
+                <div class="countdown-bar">
+                    <div class="countdown-progress" id="countdownProgress"></div>
+                </div>
+                <p class="countdown-text"><span id="countdown">5</span> seconds remaining</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Favicon Generator</h3>
+                <p>A simple tool to generate favicons for your website</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="documentation.html">Documentation</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="social-links">
+                    <a href="https://github.com/saurabhwebdev" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Favicon Generator. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 

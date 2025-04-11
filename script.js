@@ -52,20 +52,31 @@ function updateActiveNavLink() {
 // Update active nav link on page load
 document.addEventListener('DOMContentLoaded', () => {
     updateActiveNavLink();
-    const mainActionBtn = document.querySelector('.main-action-btn');
+    const mainActionBtn = document.getElementById('mainActionBtn');
     const fileInput = document.getElementById('fileInput');
     const processingOverlay = document.getElementById('processingOverlay');
     let uploadedImage = null;
 
-    mainActionBtn.addEventListener('click', () => {
-        if (!uploadedImage) {
-            fileInput.click();
-        } else {
-            downloadAllIcons();
-        }
-    });
+    // Properly define the handler functions 
+    function handleUploadButtonClick() {
+        fileInput.click();
+    }
+    
+    function handleDownloadButtonClick() {
+        generateIcons(); // Generate icons if not already done
+        downloadAllIcons();
+    }
 
-    fileInput.addEventListener('change', handleFileSelect);
+    // Check if mainActionBtn exists (might not be present on all pages)
+    if (mainActionBtn) {
+        mainActionBtn.addEventListener('click', handleUploadButtonClick);
+    }
+
+    // Check if fileInput exists before adding event listener
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFileSelect);
+    }
+
     document.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -92,7 +103,19 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = (e) => {
             uploadedImage = new Image();
             uploadedImage.onload = () => {
-                showProcessingAnimation();
+                // Pre-generate icons to catch any errors early
+                try {
+                    // Reset any previously generated icons
+                    window.generatedIcons = null;
+                    showProcessingAnimation();
+                } catch (error) {
+                    console.error("Error preparing image:", error);
+                    alert("Error processing image. Please try again with a different image.");
+                }
+            };
+            uploadedImage.onerror = () => {
+                console.error("Error loading image");
+                alert("Failed to load the image. Please try again with a different image.");
             };
             uploadedImage.src = e.target.result;
         };
@@ -129,22 +152,39 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (count <= 0) {
                 clearInterval(countdownInterval);
-                hideProcessingAnimation();
-                updateButtonToDownload();
+                try {
+                    generateIcons(); // Generate icons when countdown completes
+                    hideProcessingAnimation();
+                    updateButtonToDownload();
+                } catch (error) {
+                    console.error("Error generating icons:", error);
+                    alert("Failed to generate icons. Please try again with a different image.");
+                    hideProcessingAnimation();
+                }
             }
         }, 1000);
     }
 
     function updateButtonToDownload() {
         const mainActionBtn = document.getElementById('mainActionBtn');
+        // Check if mainActionBtn exists
+        if (!mainActionBtn) return;
+        
         mainActionBtn.innerHTML = `<i class="fas fa-download"></i><span>Download Icons</span>`;
         mainActionBtn.classList.add('download');
-        mainActionBtn.removeEventListener('click', handleUploadButtonClick);
-        mainActionBtn.addEventListener('click', handleDownloadButtonClick);
+        
+        // Remove all event listeners by cloning and replacing the element
+        const newButton = mainActionBtn.cloneNode(true);
+        mainActionBtn.parentNode.replaceChild(newButton, mainActionBtn);
+        
+        // Add the download event listener to the new button
+        newButton.addEventListener('click', handleDownloadButtonClick);
     }
 
     function generateIcons() {
         if (!uploadedImage) return;
+        
+        console.log("Generating icons from uploaded image...");
 
         const iconSizes = {
             favicon: [16, 32, 48],
@@ -179,10 +219,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         window.generatedIcons = icons;
+        console.log("Icons generated successfully:", icons.length);
+        return icons;
     }
 
     function downloadAllIcons() {
-        if (!window.generatedIcons) return;
+        // If icons haven't been generated yet, generate them
+        if (!window.generatedIcons) {
+            generateIcons();
+        }
+        
+        if (!window.generatedIcons || window.generatedIcons.length === 0) {
+            console.error("No icons to download");
+            return;
+        }
+        
+        console.log("Downloading icons...");
 
         const zip = new JSZip();
         const platforms = {};
@@ -198,20 +250,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         zip.generateAsync({ type: 'blob' })
             .then(content => {
+                console.log("Zip file created, preparing download...");
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 link.download = 'favicon-pack.zip';
+                document.body.appendChild(link); // Append to body for Firefox compatibility
                 link.click();
-                URL.revokeObjectURL(link.href);
+                setTimeout(() => {
+                    document.body.removeChild(link); // Clean up
+                    URL.revokeObjectURL(link.href);
+                }, 100);
+            })
+            .catch(error => {
+                console.error("Error generating zip file:", error);
             });
     }
 
     // Handle tips toggle
     const tipsToggle = document.querySelector('.tips-toggle');
-    const tipsContent = document.querySelector('.tips-content');
-
-    tipsToggle.addEventListener('click', () => {
-        tipsToggle.classList.toggle('active');
-        tipsContent.classList.toggle('active');
-    });
+    
+    // Only execute if tipsToggle exists
+    if (tipsToggle) {
+        const tipsContent = document.querySelector('.tips-content');
+        
+        // Check if tips elements exist before adding event listener
+        if (tipsContent) {
+            tipsToggle.addEventListener('click', () => {
+                tipsToggle.classList.toggle('active');
+                tipsContent.classList.toggle('active');
+            });
+        }
+    }
 }); 

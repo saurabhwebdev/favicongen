@@ -10,6 +10,10 @@ A simple web tool that generates various favicon and icon sizes from a single 51
 - 192x192
 - 512x512
 
+## Live Demo
+
+You can try the tool at: [GitHub Pages Demo](https://saurabhwebdev.github.io/favicon-generator/)
+
 ## How to Use
 
 1. Open the `index.html` file in a web browser
@@ -34,6 +38,23 @@ This tool works in all modern browsers that support:
 - HTML5 Canvas
 - File API
 - Drag and Drop API
+
+## Deployment
+
+### Local Development
+
+1. Clone this repository
+2. Open `index.html` in your browser
+
+### GitHub Pages Deployment
+
+This repository is set up to automatically deploy to GitHub Pages when pushing to the main branch. The `.github/workflows/pages.yml` file contains the GitHub Actions workflow that handles the deployment.
+
+To deploy your own version:
+
+1. Fork this repository
+2. Enable GitHub Pages in your repository settings
+3. Push changes to the main branch to trigger deployment
 
 ## Notes
 

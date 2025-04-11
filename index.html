@@ -4,9 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favicon Generator</title>
+    <base href="./">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        // Check if JSZip loaded correctly
+        window.addEventListener('load', function() {
+            if (typeof JSZip === 'undefined') {
+                console.error('JSZip library not loaded properly');
+                alert('Some features might not work correctly. Please try refreshing the page.');
+            } else {
+                console.log('JSZip library loaded successfully');
+            }
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar">
